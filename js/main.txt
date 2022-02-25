@@ -1,0 +1,215 @@
+$(document).ready(function() {
+
+    $("#loading").fadeOut( 1500 , function(){
+        
+        $("#loading").css("position" , "unset") ;
+        $(".sk-folding-cube").css("display" , "none");
+        
+    })
+
+
+
+    $('.answerPosition').click(function() {
+        var id = $(this).attr('question');
+        // console.log(id)
+        $('div[id=dropDown' + id + ']').css('display' , 'block')
+    });
+
+
+
+    $('.optionAnswer').click(function() {
+        let answer = $(this).attr('dataans');
+        let number = $(this).text()
+
+        let clos = $(this).parent().attr('id');
+        let questionId = clos.slice(-1);
+
+        if (answer == "correct"){
+
+            $('div[question=' + questionId + ']').html(number) ;
+            $('div[questionContainer=' + questionId + ']').css('opacity' , '0.6') ;
+
+            $('div[question=' + questionId + ']').css( 'borderColor' , 'green') ;
+            $('div[id=dropDown' + questionId + ']').css('display' , 'none')
+            $('div[question=' + questionId + ']').css("pointer-events","none");
+         
+
+            let correctSound = $('#correctSound').attr('src')
+            let correctAudio = new Audio(correctSound);
+            correctAudio.play();
+         
+                  
+        }
+        else {
+
+            
+            $('div[question=' + questionId + ']').html(number) ;
+            $('div[question=' + questionId + ']').css( 'borderColor' , 'red') ;
+            
+            
+            setTimeout(function() {   
+                $('div[question=' + questionId + ']').html('') ;
+                $('div[question=' + questionId + ']').css( 'borderColor' , 'black') ;
+                
+            }, 500);
+            
+            let incorrectSound = $('#incorrectSound').attr('src')
+            let incorrectAudio = new Audio(incorrectSound);
+            incorrectAudio.play();        }
+
+    });
+
+
+
+    $('.showInsImg').click(function() {
+
+        $('.question').each(function(){
+            $(this).css('opacity' , '0.6')
+        })
+
+        $('div[dataans="correct"]').each(function() {
+
+            let clos = $(this).parent().attr('id');
+            let questionId = clos.slice(-1);
+            // console.log(questionId)
+            let number = $(this).text()
+            $('div[question=' + questionId + ']').html(number) ;
+            $('.showInsImg').css('opacity' , 0.5) ;
+
+        });        
+        $('.qustionsContainer').css("pointer-events","none")
+        $('.answerPosition').each(function(){
+            $(this).css("pointer-events","none")
+        })
+
+    })
+
+
+
+    $('.replayImg').click(function() {
+        $('.question').each(function(){
+            $(this).css('opacity' , '1')
+        })
+
+        $('.answerPosition').each(function(){
+
+            $(this).html('')
+            $(this).css( 'borderColor' , 'black') ;
+            $(this).css("pointer-events","all");
+
+
+            $('.select-items').each(function(){
+                $(this).css('display' , 'none')
+            })
+    
+            $('.showInsImg').css('opacity' , 1) ;
+
+        })
+        $('.qustionsContainer').css("pointer-events","all")
+        $('.answerPosition').each(function(){
+            $(this).css("pointer-events","all")
+        })
+
+
+    })
+
+
+
+    $('.question').click(function(e) {
+        if (!$(e.target).hasClass('answerPosition') && !$(e.target).hasClass('optionAnswer') ) {
+            let questionId = $(this).attr('questionContainer');
+            console.log(questionId)
+
+            let correctSound = $('#q_'+questionId).attr('src')
+            let correctAudio = new Audio(correctSound);
+            correctAudio.play();
+
+        }
+    
+
+    })
+
+
+    $('body').click(function(e) {
+        
+        if (!$(e.target).hasClass('answerPosition') && !$(e.target).hasClass('optionAnswer') ) {
+
+            $('.select-items').each(function(){
+                $(this).css('display' , 'none')
+            
+            })
+        
+        }
+    
+
+    })
+
+
+
+
+    
+
+    var mPlayer = document.getElementById("fullAudio"); 
+    var mPlayAction = document.getElementsByClassName("playIcon"); 
+
+    var isPlaying = false;
+
+    function playAudio() { 
+        mPlayer.play(); 
+
+        isPlaying = true;
+        let audioPath = $(".playIcon").attr("src","assets/images/pause.png");
+
+        mPlayAction.src = audioPath;
+    } 
+
+    function pauseAudio() { 
+        mPlayer.pause();
+        isPlaying = false;
+        let audioPath = $(".playIcon").attr("src","assets/images/play.png");
+
+        mPlayAction.src = audioPath;
+    } 
+
+
+
+    $('.playIcon').click(function() {
+
+
+        if(isPlaying == true){
+            pauseAudio();
+        }else{
+            playAudio();
+        }
+    
+    })
+    
+   
+
+
+
+
+    let fullAudio = document.getElementById("fullAudio"); 
+    let slider = document.getElementById("slider"); 
+
+
+    // Set max value when you know the duration
+    fullAudio.onloadedmetadata = () => slider.max = fullAudio.duration
+    // updatefullAudio position
+    slider.onchange = () => fullAudio.currentTime = slider.value
+    // update range input when currentTime updates
+    fullAudio.ontimeupdate = () => slider.value = fullAudio.currentTime
+
+
+});
+
+
+
+
+
+
+
+
+
+
+
